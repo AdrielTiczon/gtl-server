@@ -5,12 +5,28 @@
     "@typescript-eslint"
   ],
   "extends": [
-    "google",
     "plugin:@typescript-eslint/eslint-recommended",
     "eslint:recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "google"
   ],
   "rules": {
-    "linebreak-style": ["error", "unix"]
+    "linebreak-style": ["error", "unix"],
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/semi": ["error", "never"],
+    "semi": ["error", "never"],
+    "import/extensions": "off",
+    "no-underscore-dangle": "off",
+    "class-methods-use-this": "off",
+    "no-await-in-loop": "off",
+    "max-len": ["error", 150],
+    "no-restricted-syntax": "off",
+    "guard-for-in": "off",
+    "consistent-return": "off",
+    "import/prefer-default-export": "off",
+    "no-continue": "off",
+    "no-plusplus": "off",
+    "no-prototype-builtins": "off"
   }
 }
