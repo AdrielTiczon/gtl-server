@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon",
     "build": "tsc -p tsconfig.json",
-    "start": "node -r dotenv/config ./dist/index.js",
+    "start": "node -r dotenv/config -r module-alias/register ./dist/index.js",
     "lint": "eslint . --ext .ts",
     "test": "jest --coverage"
   },
@@ -17,20 +17,34 @@
     "axios": "^0.26.0",
     "dotenv": "^16.0.0",
     "fastify": "^3.27.1",
+    "fastify-cookie": "^5.5.0",
     "fastify-cors": "^6.0.2",
-    "ts-node": "^10.5.0"
+    "fastify-grant": "^5.4.8",
+    "fastify-session": "^5.2.1",
+    "jsonwebtoken": "^8.5.1",
+    "module-alias": "^2.2.2",
+    "ts-jest": "^27.1.3",
+    "ts-node": "^10.5.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@tsconfig/node14": "^1.0.1",
     "@tsconfig/recommended": "^1.0.1",
     "@types/jest": "^27.4.0",
+    "@types/jsonwebtoken": "^8.5.8",
     "@types/node": "^17.0.18",
+    "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.12.0",
     "@typescript-eslint/parser": "^5.12.0",
     "eslint": "^8.9.0",
     "eslint-config-google": "^0.14.0",
     "jest": "^27.5.1",
     "nodemon": "^2.0.15",
+    "tsconfig-paths": "^3.12.0",
     "typescript": "^4.5.5"
+  },
+  "_moduleAliases": {
+    "@server": "server.ts",
+    "@util": "dist/src/util"
   }
 }

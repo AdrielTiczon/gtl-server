@@ -1,25 +1,15 @@
 import fastify, {FastifyInstance} from 'fastify'
 import cors from 'fastify-cors'
 
-import uwu from './src/uwu'
+import routes from './src/api/v1'
 
 const server: FastifyInstance = fastify()
 
-
-// version wrapper
-const v1 = (server, _ops, done) => {
-  server.register(uwu, {prefix: '/aj'})
-  done()
-}
-
 // middlewares
 server.register(cors)
-server.register(v1, {prefix: '/v1'})
 
-
-server.get('/ping', async (request, _reply) => {
-  return `pong\n`
-})
+// routes with version
+server.register(routes, {prefix: '/api/v1'})
 
 
 export default server

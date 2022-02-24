@@ -12,7 +12,7 @@
   ],
   "rules": {
     "linebreak-style": ["error", "unix"],
-    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-unused-vars": "warn",
     "@typescript-eslint/no-explicit-any": "warn",
     "@typescript-eslint/semi": ["error", "never"],
     "semi": ["error", "never"],

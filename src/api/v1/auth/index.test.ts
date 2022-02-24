@@ -5,9 +5,9 @@ test('hello', async () => {
 
   const res = await fastifyServer.inject({
     method: 'GET',
-    url: '/ping',
+    url: '/v1/auth/connect/github',
   })
-
+  console.log({res})
   expect(res.statusCode).toBe(200)
   expect(true).toBe(true)
 
