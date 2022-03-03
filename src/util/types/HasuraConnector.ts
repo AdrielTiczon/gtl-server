@@ -7,6 +7,7 @@ interface HasuraResponse {
   data: {
     users: HasuraUsersResponse[]
     add_user: HasuraAddUserResponse
+    insert_token: HasuraInsertTokenResponse
   }
 }
 
@@ -20,6 +21,10 @@ type HasuraAddUserResponse = {
   id: string
   name: string
   auth_identifier: string
+}
+
+type HasuraInsertTokenResponse = {
+  session_id: string
 }
 
 export {

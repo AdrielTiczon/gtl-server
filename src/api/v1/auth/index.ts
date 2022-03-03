@@ -15,6 +15,7 @@ const routes = async (fastify: FastifyInstance, _ops: FastifyServerOptions) => {
 
   fastify.get('/verify', async (request, reply) => {
     if (!request.session.grant) reply.code(403).send('unauthorized')
+
     const sessionId = request.session.sessionId
     const session = request.session.grant
 
@@ -26,9 +27,11 @@ const routes = async (fastify: FastifyInstance, _ops: FastifyServerOptions) => {
     const user = await authService.verifyUser(oAuthUser)
     const token = await authService.generateToken(user, sessionId)
 
-    console.log({oAuthUser, user, token})
+    const url = `${process.env.APP_URL}?t=${token}`
 
-    reply.send('success')
+    if (token) reply.redirect(url)
+
+    reply.send('ok')
   })
 }
 

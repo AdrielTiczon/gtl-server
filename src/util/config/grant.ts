@@ -10,16 +10,16 @@ const grantConfig = {
     'scope': ['profile email'],
     'nonce': true,
     'custom_params': {'access_type': 'online'},
-    'prefix': '/api/v1/auth/connect',
-    'callback': `${process.env.HOSTURL}/api/v1/auth/verify`,
+    'prefix': '/v1/auth/connect',
+    'callback': `${process.env.HOSTURL}/v1/auth/verify`,
   },
   'github': {
     'key': process.env.GITHUB_OAUTH_KEY,
     'secret': process.env.GITHUB_OAUTH_SECRET,
     'scope': ['read:user', 'user:email'],
     'nonce': true,
-    'prefix': '/api/v1/auth/connect',
-    'callback': `${process.env.HOSTURL}/api/v1/auth/verify`,
+    'prefix': '/v1/auth/connect',
+    'callback': `${process.env.HOSTURL}/v1/auth/verify`,
   },
 }
 

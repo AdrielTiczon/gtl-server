@@ -4,8 +4,7 @@ import jwt from 'jsonwebtoken'
 import HasuraConnector from '@util/helpers/HasuraConnector/HasuraConnector'
 import {HasuraAddUserResponse, HasuraParams, HasuraUsersResponse} from '@util/types/HasuraConnector'
 import {AuthResponse, AuthSession, AuthUser, GithubUserResponse, oAuthProviders} from '@util/types/Auth'
-import {CHECK_EXISTING_USER, CREATE_NEW_USER} from './queries/auth'
-
+import {CHECK_EXISTING_USER, CREATE_NEW_USER, INSERT_NEW_TOKEN} from './queries/auth'
 
 /**
  *  Handles the auth data between hasura and oauth
@@ -72,7 +71,7 @@ class AuthService {
   /**
    * @param {object} user
    */
-  async verifyUser(user: AuthUser): Promise<HasuraUsersResponse[] | HasuraAddUserResponse> {
+  async verifyUser(user: AuthUser): Promise<HasuraUsersResponse> {
     const {auth_identifier: identifier, provider, name} = user
 
     const users = await this.#checkExistingUser(identifier, provider)
@@ -132,9 +131,64 @@ class AuthService {
    * @param {object} user
    * @param {string} sessionId
    */
-  async generateToken(user: any, sessionId: string) {
+  async generateToken(user: HasuraUsersResponse, sessionId: string) {
     if (!user) return null
-    return 'nope'
+
+    const hasGeneratedToken = this.#generateGameTokens(user, sessionId)
+
+    if (!hasGeneratedToken) return null
+
+    const basicToken = this.#generateBasicToken(sessionId)
+
+    return basicToken
+  }
+
+  /**
+   * @param {string} sessionId
+   * @return {string}
+   */
+  #generateBasicToken(sessionId: string): string {
+    const tokenInfo = {
+      'sId': sessionId,
+      'https://hasura.io/jwt/claims': {
+        'x-hasura-allowed-roles': ['basic token'],
+        'x-hasura-default-role': 'basic token',
+      },
+    }
+    const token = jwt.sign(tokenInfo, process.env.JWT_AT_SECRET as string, {algorithm: 'HS256', expiresIn: '5m'})
+    return token
+  }
+
+  /**
+   * @param {object} user
+   * @param {string} sessionId
+   * @return {string}
+   */
+  async #generateGameTokens(user: HasuraUsersResponse, sessionId: string): Promise<boolean> {
+    const tokenInfo = {
+      'uid': user.id,
+      'https://hasura.io/jwt/claims': {
+        'x-hasura-allowed-roles': ['player', 'basic token'],
+        'x-hasura-default-role': 'player',
+      },
+    }
+    const accessToken = jwt.sign(tokenInfo, process.env.JWT_AT_SECRET as string, {algorithm: 'HS256', expiresIn: '7d'})
+    const refreshToken = jwt.sign(tokenInfo, process.env.JWT_RT_SECRET as string, {algorithm: 'HS256', expiresIn: '30d'})
+
+    const params: HasuraParams = {
+      query: INSERT_NEW_TOKEN,
+      variables: {
+        'access_token': accessToken,
+        'refresh_token': refreshToken,
+        'session_id': sessionId,
+        'user_id': user.id,
+      },
+    }
+    const {data: {data: {insert_token: insertToken}}} = await HasuraConnector.submit(params)
+
+    if (insertToken.session_id) return true
+
+    return false
   }
 }
 

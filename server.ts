@@ -9,7 +9,7 @@ const server: FastifyInstance = fastify()
 server.register(cors)
 
 // routes with version
-server.register(routes, {prefix: '/api/v1'})
+server.register(routes, {prefix: '/v1'})
 
 
 export default server
